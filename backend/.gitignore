@@ -1,0 +1,5 @@
+# Secrets
+.env
+
+# Dependencies
+nodule_modules/
