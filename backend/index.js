@@ -55,7 +55,7 @@ const taskSchema = new mongoose.Schema({
     completed: {type: Boolean, required: true, default: false},
     description: {type: String, required: true}, //Mongo doesn't do type Text
     dueDate: {type: Date, required: true},
-    dateCreated: {type: Date, required: true, default: new Date(Date.now())},
+    dateCreated: {type: Date, required: true, default: (Date.now())},
 });
 
 //Define indexes for sorting
