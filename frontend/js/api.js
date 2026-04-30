@@ -211,6 +211,7 @@ async function completeTask(taskId) {
     console.log("Task completed:", data);
     displayTasks(); 
   } 
+  //catch an error
   catch (error) {
     console.error("Error:", error);
   }
@@ -219,7 +220,8 @@ async function completeTask(taskId) {
 
 
 
-// marks task as not complete ↓
+// marks task as not complete 
+// sends a PATCH request to the backend, it unchecks a task and marking it as not complete (completed:false)
 async function taskNotCompleted(taskId) {
   try {
     const response = await fetch(`${url}/api/tasks/notComplete/${taskId}`, {
@@ -244,7 +246,8 @@ async function taskNotCompleted(taskId) {
 
 
 
-// delete task ↓
+// delete task
+// send DELETE request to the backend with the given task ID. It requests to log the deleted task the displayTasks()
 async function deleteTask(taskId) {
   try {
     const response = await fetch(`${url}/api/tasks/delete/${taskId}`, {
@@ -268,7 +271,10 @@ async function deleteTask(taskId) {
 
 
 
-// enables editing of the task ↓
+// enables editing of the task
+// grabs elements to make sure all fields are filled. Then send PUT request to the backend with the updated details
+// If request is succesfull, will log the result and displayTasks()
+//else error
 async function editTask(taskId) {
   const updatedDetails = {     
     title: document.getElementById('editTaskName').value.trim(),

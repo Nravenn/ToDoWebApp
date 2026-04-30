@@ -19,7 +19,7 @@ app.use(express.json());
 
 app.use(cors("*"));
 
-//------------------ MONGO SETUP
+// MONGO SETUP
 (async () => {
     try{
         //Setting autoIndex to false
@@ -39,7 +39,8 @@ app.use(cors("*"));
     }
 })();
 
-//Define a task Schema
+//Define a task (mongoose) Schema. Mongoose is a library that sits on top of MongoDB and add structure.
+// MongoDB is schema-less by default, Mongoose lets you enforce rules on your data. Schema is a rule set of how things are layed out
 const taskSchema = new mongoose.Schema({
     title: {type: String, required: true},
     completed: {type: Boolean, required: true, default: false},
@@ -58,6 +59,10 @@ const Task = mongoose.model("Task", taskSchema);
 //-----------------API routes------------------------
 
 // Get all tasks
+// This request fetches all tasks from the datavase and send them back to client
+// Checks sortBy which was included in URL. Queries database with Task.find({})
+//Applies sort if there is one, sends the results back to JSON. 
+// Essentially getting a list of all your tasks, optionally sorted by due date or date created
 app.get('/api/tasks', async (req, res) => {
   try {
     const { sortBy } = req.query; // ?sortBy=dueDate or ?sortBy=dateCreated
@@ -79,6 +84,7 @@ app.get('/api/tasks', async (req, res) => {
 });
 
 //Create a new task and add it to the tasks array/list
+// creates a new task and saves it to the database
 app.post('/api/tasks/todo', async (req, res) => {
   try {
     const { title, description, dueDate } = req.body;
@@ -94,7 +100,8 @@ app.post('/api/tasks/todo', async (req, res) => {
 });
 
 
-// To 'complete' the task and move columns ↓   
+// PATCH another HTTP method which partially updating a specific method rather than creating a new one  
+// Marks the task as complete (else shows error) 
 app.patch('/api/tasks/complete/:id', async (req, res) => {
   try {
     const { completed } = req.body;
@@ -114,7 +121,8 @@ app.patch('/api/tasks/complete/:id', async (req, res) => {
 
 
 
-// To make the task 'not complete' and move columns ↓
+// To make the task 'not complete' and move columns
+//PATCH because it is updating an existing method
 app.patch('/api/tasks/notComplete/:id', async (req, res) => {
   try {
     const { completed } = req.body; 
@@ -134,7 +142,7 @@ app.patch('/api/tasks/notComplete/:id', async (req, res) => {
 
 
 
-// To delete the task  ↓ 
+// Delete method permanently deletes task from database
 app.delete('/api/tasks/delete/:id', async (req, res) => {
   try {
     const taskId = req.params.id;
@@ -148,8 +156,6 @@ app.delete('/api/tasks/delete/:id', async (req, res) => {
     res.status(500).json({ message: "Error deleting the task!" });
   }
 });
-
-
 
 
 // To edit exisiting task and update
